@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Circular Badge Glow -->
+    <path
+        android:pathData="M54,20 C72.778,20 88,35.222 88,54 C88,72.778 72.778,88 54,88 C35.222,88 20,72.778 20,54 C20,35.222 35.222,20 54,20 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="20"
+                android:endX="54"
+                android:endY="88"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFF8EF" />
+                <item android:offset="1.0" android:color="#FFE0B2" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Inner Accent Ring -->
+    <path
+        android:pathData="M54,24 C70.569,24 84,37.431 84,54 C84,70.569 70.569,84 54,84 C37.431,84 24,70.569 24,54 C24,37.431 37.431,24 54,24 Z"
+        android:strokeWidth="2"
+        android:strokeColor="#FFA726"
+        android:fillColor="#00000000" />
+    <!-- Dynamic Lightning Bolt Symbol -->
+    <path
+        android:pathData="M57,28 L37,56 L51,56 L47,78 L71,48 L57,48 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="37"
+                android:startY="28"
+                android:endX="71"
+                android:endY="78"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFB300" />
+                <item android:offset="0.5" android:color="#F57C00" />
+                <item android:offset="1.0" android:color="#E65100" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Highlight Sparkle -->
+    <path
+        android:pathData="M70,32 L72,36 L76,38 L72,40 L70,44 L68,40 L64,38 L68,36 Z"
+        android:fillColor="#FFD54F" />
+</vector>

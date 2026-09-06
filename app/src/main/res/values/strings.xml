@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Electricians App</string>
+    <string name="app_tagline">Powering Progress, Lighting Lives</string>
+    <string name="login_tagline">Powering Progress, Lighting Lives</string>
+    <string name="scheme_name">Electrician Scheme</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_subtitle">Login to track your progress, achieve targets and earn exciting rewards.</string>
+    <string name="enter_mobile_number">Enter your mobile number</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="security_title">Your security is our priority</string>
+    <string name="security_subtitle">Login with your registered mobile number.\nApproved by Electricians App.</string>
+    <string name="new_to_app">New to Electricians App?</string>
+    <string name="register_now">Register now to get started</string>
+    <string name="need_help">Need Help?</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="verify_otp_title">Verify OTP</string>
+    <string name="verify_otp_sent_to">We\'ve sent a 6-digit code to</string>
+    <string name="change_number">Change Number</string>
+    <string name="verify_otp_button">VERIFY OTP</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="resend_otp_timer">Resend OTP in 00:%02d</string>
+    <string name="otp_security_note">For your security, never share this OTP with anyone.</string>
+    <string name="otp_verified_success">OTP Verified Successfully!</string>
+    <string name="login_success">Login successful.</string>
+    <string name="sending_otp_message">Sending OTP…</string>
+    <string name="sending_otp_desc">Please wait while we send the verification code to your number.</string>
+    <string name="verifying_otp_message">Verifying OTP…</string>
+    <string name="registration_under_review">REGISTRATION UNDER REVIEW</string>
+    <string name="registration_submitted_desc">Your registration has been submitted successfully.\nOur team will verify your details.\nYou\'ll be notified once your account is approved.</string>
+</resources>

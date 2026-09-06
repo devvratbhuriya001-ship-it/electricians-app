@@ -1,0 +1,130 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && (
+        request.auth.token.role == role ||
+        getUserData().role == role
+      );
+    }
+
+    function isStaff() {
+      return hasRole('STAFF') || hasRole('OWNER');
+    }
+
+    function isAdmin() {
+      return hasRole('OWNER');
+    }
+
+    function isApproved() {
+      return isAuthenticated() && (
+        request.auth.token.accountStatus == 'APPROVED' ||
+        getUserData().accountStatus == 'APPROVED'
+      );
+    }
+
+    // 1. Users Collection
+    match /users/{userId} {
+      // Users can read their own profile; Staff and Admin can view profiles
+      allow read: if isOwner(userId) || isStaff();
+      
+      // Users cannot create or escalate roles directly; Cloud Functions manages privileged writes
+      allow create: if isOwner(userId) 
+        && request.resource.data.role == 'ELECTRICIAN'
+        && request.resource.data.accountStatus == 'PENDING';
+
+      // Updates: user can update harmless profile fields (area, businessName),
+      // but is FORBIDDEN from altering role, accountStatus, approvedAt, or uid
+      allow update: if (isOwner(userId) 
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.accountStatus == resource.data.accountStatus
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.phoneNumber == resource.data.phoneNumber)
+        || isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    // 2. Registration Requests Collection
+    match /registration_requests/{requestId} {
+      // User can read their own request; Staff and Admin can review
+      allow read: if (isAuthenticated() && resource.data.uid == request.auth.uid) || isStaff();
+
+      // Normal creation must be strictly PENDING
+      allow create: if isAuthenticated() 
+        && request.resource.data.status == 'PENDING'
+        && request.resource.data.reviewedAt == null
+        && request.resource.data.reviewedBy == null;
+
+      // Only Owner/Admin can approve or reject registrations
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 3. Transactions Collection
+    match /transactions/{transactionId} {
+      // Electrician can view their own transactions; Staff & Admin can view all
+      allow read: if isStaff() || (
+        isAuthenticated() && isApproved() && resource.data.createdBy == request.auth.uid
+      );
+
+      // Staff or Admin can record/create transactions
+      allow create: if isStaff();
+
+      // Only Staff & Admin can verify/reject/adjust transactions
+      allow update: if isStaff();
+      allow delete: if isAdmin();
+    }
+
+    // 4. Schemes & Rewards Collections (Catalog)
+    match /schemes/{schemeId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /rewards/{rewardId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 5. Notifications
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if isStaff();
+    }
+
+    // 6. Internal rate limits & OTP sessions (Controlled strictly by Cloud Functions Admin SDK)
+    match /otp_sessions/{sessionId} {
+      allow read, write: if false; // Deny direct client SDK access
+    }
+
+    match /otp_rate_limits/{phoneKey} {
+      allow read, write: if false; // Deny direct client SDK access
+    }
+
+    match /registration_drafts/{sessionId} {
+      allow read, write: if false; // Deny direct client SDK access
+    }
+
+    // 7. Temporary Connection Test Collection (Scoped strictly to this test collection)
+    match /firebase_connection_test/{testDocId} {
+      allow read, write: if true;
+    }
+  }
+}

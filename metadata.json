@@ -1,0 +1,6 @@
+{
+  "name": "Electricians App",
+  "description": "Loyalty, achievement, rewards, performance, and transaction tracking platform for electricians",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
